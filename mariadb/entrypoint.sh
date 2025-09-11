@@ -2,7 +2,6 @@
 
 set -eu
 
-DB_NAME=wordpress
 DB_USER=wp-user
 DB_PASSWORD=ahanaf123
 DB_ROOT_PASSWORD=root123

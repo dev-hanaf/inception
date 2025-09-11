@@ -1,0 +1,11 @@
+services:
+    mariadb:
+        build: mariadb/
+        image: mariadb:v0.1
+        container_name: mariadb
+        environment:
+            DB_NAME: wordpress
+        volumes:
+            -/home/ahanaf/data/database:/var/lib/mysql
+        network:
+            
