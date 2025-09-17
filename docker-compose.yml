@@ -1,0 +1,34 @@
+services:
+  mariadb:
+    build: ./mariadb/.
+    image: mariadb:v0.1
+    container_name: mariadb
+    environment:
+      DB_NAME: wordpress
+    networks:
+      - my-net
+    volumes:
+      - ./data/database:/var/lib/mysql
+  wordpress:
+    build: ./wordpress/.
+    image: wordpress:v0.1
+    container_name: wordpress
+    networks:
+      - my-net 
+    volumes:
+      - ./data/www:/var/www/html
+   
+  nginx:
+    build: ./nginx/.
+    image: nginx:v0.1
+    container_name: nginx
+    networks:
+      - my-net
+    volumes:
+      - ./data/www:/var/www/html
+    ports:
+      - "8080:443"   
+
+networks:
+  my-net:
+    driver: bridge

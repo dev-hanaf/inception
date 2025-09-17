@@ -2,17 +2,21 @@
 
 set -eu
 
+chown -R mysql:mysql /var/lib/mysql
+
 DB_USER=wp-user
 DB_PASSWORD=ahanaf123
 DB_ROOT_PASSWORD=root123
+
+mysql_install_db
 
 echo "running mariadb in background"
 mysqld --skip_networking &
 MYSQL_PID=$!
 
 echo "Waiting for MariaDB..."
-until mysqladmin ping --silent \
-   || mysqladmin -uroot -p"${DB_ROOT_PASSWORD}" ping --silent; do
+until mysqladmin ping > /dev/null 2>&1 \
+   || mysqladmin -uroot -p"${DB_ROOT_PASSWORD}" ping > /dev/null 2>&1; do
     echo "  still waiting..."
     sleep 1
 done
@@ -20,10 +24,17 @@ done
 
 echo "creating database..."
 
-mariadb << EOF
+if mysqladmin -uroot -p"${DB_ROOT_PASSWORD}" ping > /dev/null 2>&1; then
+    MARIADB="mariadb -uroot -p$DB_ROOT_PASSWORD"
+else
+    MARIADB="mariadb"
+fi
+
+echo "hellooooooooooooooooooooooooooooooooooo world"
+
+${MARIADB} << EOF
 CREATE DATABASE IF NOT EXISTS ${DB_NAME};
-USE ${DB_NAME};
-CREATE USER '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASSWORD}';
+CREATE USER IF NOT EXISTS'${DB_USER}'@'%' IDENTIFIED BY '${DB_PASSWORD}';
 GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${DB_USER}'@'%';
 ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT_PASSWORD}';
 FLUSH PRIVILEGES;
