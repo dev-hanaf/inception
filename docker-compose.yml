@@ -4,7 +4,10 @@ services:
     image: mariadb:v0.1
     container_name: mariadb
     environment:
-      DB_NAME: wordpress
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     networks:
       - my-net
     volumes:
@@ -17,7 +20,11 @@ services:
       - my-net 
     volumes:
       - ./data/www:/var/www/html
-   
+    environment:
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: mariadb:3306
   nginx:
     build: ./nginx/.
     image: nginx:v0.1

@@ -7,23 +7,20 @@ RUN apt-get update && apt-get install -y \
 	unzip
 
 RUN mkdir -p /var/www/html
-RUN mkdir -p /usr/src
-#WORKDIR /var/www/html
-WORKDIR /usr/src
+RUN mkdir -p /data
 
-#RUN unzip latest.zip && mv wordpress/* . && rmdir wordpress && rm latest.zip
+WORKDIR /data
 
-RUN curl -O https://wordpress.org/latest.zip \
-    && unzip latest.zip \
-    && rm latest.zip
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+	&& chmod +x /usr/local/bin/wp
 
-COPY wp-config.php wordpress/
+COPY wp-config.php .
 
 COPY www.conf /etc/php/8.2/fpm/pool.d/www.conf
 
 COPY --chmod=755 entrypoint.sh /
 
-
 WORKDIR /var/www/html
+
 
 CMD ["/entrypoint.sh"]

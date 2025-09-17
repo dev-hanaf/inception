@@ -4,10 +4,6 @@ set -eu
 
 chown -R mysql:mysql /var/lib/mysql
 
-DB_USER=wp-user
-DB_PASSWORD=ahanaf123
-DB_ROOT_PASSWORD=root123
-
 mysql_install_db
 
 echo "running mariadb in background"
