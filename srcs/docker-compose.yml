@@ -1,6 +1,6 @@
 services:
   mariadb:
-    build: ./mariadb/.
+    build: requirements/mariadb/.
     image: mariadb:v0.1
     container_name: mariadb
     environment:
@@ -11,30 +11,30 @@ services:
     networks:
       - my-net
     volumes:
-      - ./data/database:/var/lib/mysql
+      - /home/ahanaf/data/database:/var/lib/mysql
   wordpress:
-    build: ./wordpress/.
+    build: requirements/wordpress/.
     image: wordpress:v0.1
     container_name: wordpress
     networks:
       - my-net 
     volumes:
-      - ./data/www:/var/www/html
+      - /home/ahanaf/data/www:/var/www/html
     environment:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
-      DB_HOST: mariadb:3306
+      DB_HOST_PORT: mariadb:3306
   nginx:
-    build: ./nginx/.
+    build: requirements/nginx/.
     image: nginx:v0.1
     container_name: nginx
     networks:
       - my-net
     volumes:
-      - ./data/www:/var/www/html
+      - /home/ahanaf/data/www:/var/www/html
     ports:
-      - "8080:443"   
+      - "443:443"   
 
 networks:
   my-net:
