@@ -21,10 +21,18 @@ services:
     volumes:
       - /home/ahanaf/data/www:/var/www/html
     environment:
+      URL: ${URL}
+      TITLE: ${TITLE}
+      WP_ADMIN_USER: ${WP_ADMIN_USER}
+      WP_ADMIN_EMAIL: ${WP_ADMIN_EMAIL}
+      WP_USER: ${WP_USER}
+      WP_ROLE: ${WP_ROLE}
+      WP_USER_EMAIL: ${WP_USER_EMAIL}
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
-      DB_HOST_PORT: mariadb:3306
+      DB_HOST_PORT: ${DB_HOST_PORT}
+      DB_HOST: ${DB_HOST}
   nginx:
     build: requirements/nginx/.
     image: nginx:v0.1

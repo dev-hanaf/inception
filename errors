@@ -1,0 +1,14 @@
+ahanaf@ahanaf:~/Desktop/Inception/srcs$ docker-compose up --build
+[+] Building 2.1s (4/4) FINISHED                                                                                                                                                                    docker:default
+ => [wordpress internal] load build definition from Dockerfile                                                                                                                                                0.0s
+ => => transferring dockerfile: 956B                                                                                                                                                                          0.0s
+ => ERROR [wordpress internal] load metadata for docker.io/library/alpine:3.22                                                                                                                                1.9s
+ => [nginx internal] load build definition from Dockerfile                                                                                                                                                    0.0s
+ => => transferring dockerfile: 811B                                                                                                                                                                          0.0s
+ => [mariadb internal] load build definition from Dockerfile                                                                                                                                                  0.0s
+ => => transferring dockerfile: 223B                                                                                                                                                                          0.0s
+------
+ > [wordpress internal] load metadata for docker.io/library/alpine:3.22:
+------
+failed to solve: alpine:3.22: failed to resolve source metadata for docker.io/library/alpine:3.22: unexpected status from HEAD request to https://registry-1.docker.io/v2/library/alpine/manifests/3.22: 401 Unauthorized
+
