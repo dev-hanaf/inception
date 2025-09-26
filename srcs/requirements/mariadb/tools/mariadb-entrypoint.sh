@@ -22,10 +22,6 @@ $MARIADB_DAEMON --user=mysql --skip-networking --socket=$SOCKET &
 MYSQL_PID=$!
 
 echo ">>>>>>>>>>>>>>Waiting for MariaDB to be ready..."
-#until mysqladmin --socket=$SOCKET ping --silent >/dev/null 2>&1; do
-#    echo "  still waiting..."
-#    sleep 1
-#done
 
 until mysqladmin --socket=$SOCKET ping --silent >/dev/null 2>&1 \
 	|| mysqladmin --socket=$SOCKET -uroot -p"${DB_ROOT_PASSWORD}" ping --silent >/dev/null 2>&1
@@ -35,11 +31,6 @@ do
 done
 
 echo ">>>>>>>>>>>>>>MariaDB is up!"
-#sleep 10
-MARIADB="mariadb -u root --socket=$SOCKET"
-if mysqladmin --socket=$SOCKET ping --silent >/dev/null 2>&1; then
-    MARIADB="mariadb -u root -p${DB_ROOT_PASSWORD} --socket=$SOCKET"
-fi
 
 MARIADB="mariadb -u root --socket=$SOCKET"
 if mysqladmin --socket=$SOCKET ping --silent >/dev/null 2>&1; then
@@ -52,7 +43,6 @@ CREATE DATABASE IF NOT EXISTS ${DB_NAME};
 CREATE USER IF NOT EXISTS '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASSWORD}';
 GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${DB_USER}'@'%';
 ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT_PASSWORD}';
-DELETE FROM mysql.user WHERE User='';
 FLUSH PRIVILEGES;
 EOF
 

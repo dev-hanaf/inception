@@ -1,7 +1,0 @@
-/ # mysqladmin -u root -proot123 ping
-mysqladmin: Deprecated program name. It will be removed in a future release, use '/usr/bin/mariadb-admin' instead
-mysqld is alive
-/ # /usr/bin/mariadb-admin -u root -proot123 ping
-mysqld is alive
-/ # 
-

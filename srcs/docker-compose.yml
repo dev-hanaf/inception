@@ -42,7 +42,21 @@ services:
     volumes:
       - /home/ahanaf/data/www:/var/www/html
     ports:
-      - "443:443"   
+      - "443:443"
+  website:
+    build: requirements/bonus/website/.
+    image: website:v0.1
+    container_name: website
+    ports:
+      - "3000:3000"
+  adminer:
+    build: requirements/bonus/adminer/.
+    image: adminer:v0.1
+    container_name: adminer
+    ports:
+      - "8080:8080"
+    networks:
+      - my-net
 
 networks:
   my-net:
