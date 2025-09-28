@@ -33,6 +33,8 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_HOST_PORT: ${DB_HOST_PORT}
       DB_HOST: ${DB_HOST}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
   nginx:
     build: requirements/nginx/.
     image: nginx:v0.1
@@ -57,6 +59,20 @@ services:
       - "8080:8080"
     networks:
       - my-net
+
+  redis:
+    build:
+      context: requirements/bonus/redis
+      dockerfile: Dockerfile
+    image: redis:v0.1
+    container_name: redis
+    restart: always
+    networks:
+      - my-net
+    ports:
+      - "6379:6379"
+    volumes:
+      - /home/ahanaf/data/redis:/data
 
 networks:
   my-net:

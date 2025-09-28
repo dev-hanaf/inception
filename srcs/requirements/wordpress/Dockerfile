@@ -14,7 +14,10 @@ RUN apk update && apk add --no-cache \
     php83-curl \
     php83-json \
     php83-phar \
-    php83-ctype
+    php83-ctype \
+    php83-redis \
+    unzip \
+    redis
 
 RUN apk add --no-cache php83-phar
 RUN ln -s /usr/bin/php83 /usr/bin/php
@@ -24,7 +27,8 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
     && mv wp-cli.phar /usr/local/bin/wp
 
 COPY conf/www.conf /etc/php83/php-fpm.d/www.conf
-#COPY conf/wp-config.php /tmp/wp-config.php
+COPY conf/wp-config.php /tmp/wp-config.php
+COPY conf/php.ini /etc/php83/php.ini
 COPY --chmod=700 tools/wp-entrypoint.sh /usr/local/bin/wp-entrypoint.sh
 
 
