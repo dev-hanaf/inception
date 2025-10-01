@@ -74,6 +74,36 @@ services:
     volumes:
       - /home/ahanaf/data/redis:/data
 
+  ftp:
+    build: requirements/bonus/ftp/.
+    image: ftp:v0.1
+    container_name: ftp
+    volumes:
+      - /home/ahanaf/data/web:/home/ftpuser/wordpress
+    environment:
+      - FTP_USER=ftpuser
+      - FTP_PASS=ftppassword
+    ports:
+      - "21:21"
+      - "21100-21110:21100-21110"
+    networks:
+      - my-net
+
+  cadvisor:
+    build: requirements/bonus/cadvisor/.
+    image: cadvisor:v0.1
+    container_name: cadvisor
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    ports:
+      - "8084:8084"
+    networks:
+      - my-net
+    restart: on-failure
+
 networks:
   my-net:
     driver: bridge
