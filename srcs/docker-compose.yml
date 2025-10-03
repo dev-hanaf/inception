@@ -3,6 +3,7 @@ services:
     build: requirements/mariadb/.
     image: mariadb:v0.1
     container_name: mariadb
+    restart: always
     environment:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
@@ -16,6 +17,10 @@ services:
     build: requirements/wordpress/.
     image: wordpress:v0.1
     container_name: wordpress
+    restart: always
+    depends_on:
+      - mariadb
+      - redis
     networks:
       - my-net 
     volumes:
@@ -36,9 +41,20 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
   nginx:
-    build: requirements/nginx/.
+    build:
+      context: requirements/nginx
+      args:
+        COUNTRY: ${COUNTRY}
+        STATE: ${STATE}
+        LOCALITY: ${LOCALITY}
+        ORGANIZATION: ${ORGANIZATION}
+        UNIT: ${UNIT}
+        COMMON_NAME: ${COMMON_NAME}
     image: nginx:v0.1
     container_name: nginx
+    restart: always
+    depends_on:
+      - wordpress
     networks:
       - my-net
     volumes:
@@ -49,12 +65,18 @@ services:
     build: requirements/bonus/website/.
     image: website:v0.1
     container_name: website
+    restart: always
+    networks:
+      - my-net
     ports:
       - "3000:3000"
   adminer:
     build: requirements/bonus/adminer/.
     image: adminer:v0.1
     container_name: adminer
+    restart: always
+    depends_on:
+      - mariadb
     ports:
       - "8080:8080"
     networks:
@@ -78,8 +100,9 @@ services:
     build: requirements/bonus/ftp/.
     image: ftp:v0.1
     container_name: ftp
+    restart: always
     volumes:
-      - /home/ahanaf/data/web:/home/ftpuser/wordpress
+      - /home/ahanaf/data/www:/home/ftpuser/wordpress
     environment:
       - FTP_USER=ftpuser
       - FTP_PASS=ftppassword

@@ -1,20 +1,19 @@
 FROM alpine:3.19
 
-RUN apk update && apk add --no-cache nodejs npm
+RUN  apk update && apk add --no-cache nginx 
 
 
-WORKDIR app
+COPY conf/default.conf /etc/nginx/http.d/
+COPY conf/index.html /tmp/
+COPY conf/style.css /tmp/
 
-COPY conf/site .
+RUN mkdir -p /var/www/html
 
-WORKDIR /app/site
+RUN adduser -S -D -H -h /var/www -s /sbin/nologin -G www-data www-data
 
-
-RUN npm run build
-RUN npm install -g serve
+COPY tools/entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
 EXPOSE 3000
 
-
-CMD ["serve", "-s", "build", "-l", "3000"]
-
+CMD ["entrypoint.sh"]
