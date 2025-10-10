@@ -1,6 +1,13 @@
 #!/bin/sh
 set -eu
 
+if [ ! -f /run/secrets/ftp_user_password ]; then
+    echo "ERROR: ftp_credentials secret not found!"
+    exit 1
+fi
+
+FTP_PASS=$(cat /run/secrets/ftp_user_password)
+
 echo ">>>>Creating empty dir"
 mkdir -p /var/run/vsftpd/empty
 chmod 755 /var/run/vsftpd/empty

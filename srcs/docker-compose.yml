@@ -7,8 +7,9 @@ services:
     environment:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    secrets:
+      - db_password
+      - db_root_password
     networks:
       - my-net
     volumes:
@@ -22,7 +23,7 @@ services:
       - mariadb
       - redis
     networks:
-      - my-net 
+      - my-net
     volumes:
       - /home/ahanaf/data/www:/var/www/html
     environment:
@@ -35,11 +36,13 @@ services:
       WP_USER_EMAIL: ${WP_USER_EMAIL}
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
       DB_HOST_PORT: ${DB_HOST_PORT}
       DB_HOST: ${DB_HOST}
       REDIS_HOST: redis
       REDIS_PORT: 6379
+    secrets:
+      - db_password
+      - wp_admin_password
   nginx:
     build:
       context: requirements/nginx
@@ -91,8 +94,6 @@ services:
     restart: always
     networks:
       - my-net
-    ports:
-      - "6379:6379"
     volumes:
       - /home/ahanaf/data/redis:/data
 
@@ -104,8 +105,9 @@ services:
     volumes:
       - /home/ahanaf/data/www:/home/ftpuser/wordpress
     environment:
-      - FTP_USER=ftpuser
-      - FTP_PASS=ftppassword
+      FTP_USER: ${FTP_USER}
+    secrets:
+      - ftp_user_password
     ports:
       - "21:21"
       - "21100-21110:21100-21110"
@@ -130,3 +132,28 @@ services:
 networks:
   my-net:
     driver: bridge
+
+secrets:
+  db_password:
+    file: ../secrets/db_password.txt
+  db_root_password:
+    file: ../secrets/db_root_password.txt
+  wp_admin_password:
+    file: ../secrets/wp_admin_password.txt
+  ftp_user_password:
+    file: ../secrets/ftp_user_password.txt
+
+volumes:
+  wordpress_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/ahanaf/data/wordpress
+
+  db_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/ahanaf/data/mariadb

@@ -1,7 +1,23 @@
 #!/bin/sh
 set -eu
 
-# Use mariadbd if available (recommended for MariaDB 10.5+)
+# Read secrets from files
+if [ -f /run/secrets/db_password ]; then
+    DB_PASSWORD=$(cat /run/secrets/db_password)
+else
+    echo "ERROR: db_password secret not found!"
+    exit 1
+fi
+
+if [ -f /run/secrets/db_root_password ]; then
+    DB_ROOT_PASSWORD=$(cat /run/secrets/db_root_password)
+else
+    echo "ERROR: db_root_password secret not found!"
+    exit 1
+fi
+
+
+
 MARIADB_DAEMON="mariadbd"
 command -v mariadbd >/dev/null 2>&1 || MARIADB_DAEMON="mysqld"
 

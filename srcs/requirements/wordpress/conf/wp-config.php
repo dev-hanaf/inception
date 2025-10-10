@@ -20,17 +20,15 @@
 
 // ** Database settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define( 'DB_NAME', 'wordpress' );
+define( 'DB_NAME', getenv('DB_NAME') );
 
 /** Database username */
-define( 'DB_USER', 'wp-user' );
+define( 'DB_USER', getenv('DB_USER') );
 
 /** Database password */
-define('DB_PASSWORD', 'ahanaf123');
-#define('DB_PASSWORD', trim(file_get_contents('/run/secrets/db_password')));
-
+define('DB_PASSWORD', trim(file_get_contents('/run/secrets/db_password')));
 /** Database hostname */
-define( 'DB_HOST', 'mariadb:3306' );
+define( 'DB_HOST', getenv('DB_HOST_PORT') );
 
 /** Database charset to use in creating database tables. */
 define( 'DB_CHARSET', 'utf8' );
@@ -60,8 +58,8 @@ define( 'NONCE_SALT',       'put your unique phrase here' );
 
 /**#@-*/
 
-define('WP_REDIS_HOST', 'redis');
-define('WP_REDIS_PORT', 6379);
+define('WP_REDIS_HOST', getenv('REDIS_HOST'));
+define('WP_REDIS_PORT', getenv('REDIS_PORT'));
 #define('WP_REDIS_PASSWORD', 'redispassword');
 
 /**

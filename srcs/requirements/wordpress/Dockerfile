@@ -7,7 +7,7 @@ RUN apk update && apk add --no-cache \
     php83-mysqli \
     curl \
     tar \
-    mariadb-client\
+    mariadb-client \
     php83-mbstring \
     php83-iconv \
     php83-openssl \
@@ -17,30 +17,24 @@ RUN apk update && apk add --no-cache \
     php83-ctype \
     php83-redis \
     unzip \
-    redis
-
-RUN apk add --no-cache php83-phar
-RUN ln -s /usr/bin/php83 /usr/bin/php
-
-RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+    redis \
+    && ln -s /usr/bin/php83 /usr/bin/php \
+    && curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
     && chmod +x wp-cli.phar \
-    && mv wp-cli.phar /usr/local/bin/wp
+    && mv wp-cli.phar /usr/local/bin/wp \
+    && adduser -S -D -H -h /var/www -s /sbin/nologin -G www-data www-data \
+    && mkdir -p /var/www/html
 
-COPY conf/www.conf /etc/php83/php-fpm.d/www.conf
-COPY conf/wp-config.php /tmp/wp-config.php
-COPY conf/php.ini /etc/php83/php.ini
-COPY --chmod=700 tools/wp-entrypoint.sh /usr/local/bin/wp-entrypoint.sh
-
-
-RUN adduser -S -D -H -h /var/www -s /sbin/nologin -G www-data www-data
 #-S → system user
 #-D → no password
 #-H → no home directory created (we set /var/www manually)
 #-h /var/www → home dir for compatibility
 #-s /sbin/nologin → no shell
 #-G www-data → assign to existing www-data group
+COPY conf/www.conf /etc/php83/php-fpm.d/www.conf
+COPY conf/php.ini /etc/php83/php.ini
+COPY --chmod=700 tools/wp-entrypoint.sh /usr/local/bin/wp-entrypoint.sh
 
-RUN mkdir -p /var/www/html
 
 WORKDIR /var/www/html
 

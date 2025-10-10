@@ -1,2 +1,5 @@
 data/www/*
 data/database/*
+#secrets/
+#srcs/.env
+#*.secret
